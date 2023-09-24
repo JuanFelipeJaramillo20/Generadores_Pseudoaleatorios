@@ -1,6 +1,6 @@
 import numpy as np
-from Generador_Estandar_Minimo import generador_lcg
-from Generador_Lineal_Congruente import generador_glc
+from Generador_Estandar_Minimo import run_gem
+from Generador_Lineal_Congruente import run_glc
 from Pruebas import (
     prueba_chi_cuadrado,
     prueba_kolmogorov_smirnov,
@@ -9,17 +9,35 @@ from Pruebas import (
     prueba_poker,
 )
 
+""" PARA GLC:
 a = 106
 c = 1238
 m = 6075
-X0 = 12345
-N = 10000  # Cantidad de números pseudoaleatorios a generar
+X0 = 0
+N = 10000 """
 
-# Generar números pseudoaleatorios utilizando el Generador Lineal Congruente (GLC)
-valores_glc, periodo_glc = generador_glc(a, c, m, X0, N)
+""" PARA GEM:
+a = 16807
+c = 1238
+m = 2147483641
+X0 = 1
+N = 10000  # Cantidad de números pseudoaleatorios a generar """
 
-# Generar números pseudoaleatorios utilizando el Generador de Estándar Mínimo (LCG)
-valores_lcg, periodo_lcg = generador_lcg(a, m, X0, N)
+a = 16807
+c = 1238
+m = 2147483641
+X0 = 1
+N = 10000
+
+valores_lcg, periodo_lcg = run_gem(a, m, X0, N)
+#valores_lcg, periodo_lcg = run_glc(a, c, m, X0, N)
+#prueba_chi_cuadrado(valores_lcg, 2147483641)
+#prueba_kolmogorov_smirnov(valores_lcg, m)
+#prueba_corridas(valores_lcg, periodo_lcg)
+#prueba_series(valores_lcg, m)
+#prueba_poker(valores_lcg, 5, m)
+prueba_poker(valores_lcg, 5, m)
+""" 
 
 # Realizar pruebas de Chi-cuadrado y Kolmogorov-Smirnov para GLC
 print("Pruebas para GLC:")
@@ -131,3 +149,4 @@ evaluar_resultados(resultados_pruebas_glc)
 
 print("\nEvaluación del Generador LCG:")
 evaluar_resultados(resultados_pruebas_lcg)
+ """

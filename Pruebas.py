@@ -1,10 +1,45 @@
 import math
-import numpy as np
+import matplotlib.pyplot as plt
+
 
 datos2 = [8, 71, 126, 109, 84, 115, 10, 89, 32, 31, 22, 69, 108, 75, 34, 49, 56, 119, 46, 29, 4, 35, 58, 9, 80, 79, 70, 117, 28, 123]
 
 datos = [8, 71, 126, 109, 84, 115, 10, 89, 32, 31, 22, 69, 108, 75, 34, 49, 56, 119, 46, 29, 4, 35, 58, 9, 80, 79, 70, 117, 28, 123, 82, 97, 104, 39, 94, 77, 52, 83, 106, 57, 0, 127, 118, 37, 76, 43, 2, 17, 24, 87, 14, 125, 100, 3, 26, 105, 48, 47, 38, 85, 124, 91, 50, 65, 72, 7, 62, 45, 20, 51, 74, 25, 96, 95, 86, 5, 44, 11, 98, 113, 120, 55, 110, 93, 68, 99, 122, 73, 16, 15, 6, 53, 92, 59, 18, 33, 40, 103, 30, 13, 116, 19, 42, 121, 64, 63, 54, 101, 12, 107, 66, 81, 88, 23, 78, 61, 36, 67, 90, 41, 112, 111, 102, 21, 60, 27, 114, 1, 8, 71, 126, 109, 84, 115, 10, 89, 32, 31, 22, 69, 108, 75, 34, 49, 56, 119, 46, 29, 4, 35, 58, 9, 80, 79, 70, 117, 28, 123, 82, 97, 104, 39, 94, 77, 52, 83, 106, 57, 0, 127, 118, 37, 76, 43, 2, 17, 24, 87, 14, 125, 100, 3, 26, 105, 48, 47, 38, 85, 124, 91, 50, 65, 72, 7, 62, 45, 20, 51, 74, 25]
 periodo = 128
+
+def plot_2d_table(table, fe):
+    rows = list(table.keys())
+    cols = list(table[rows[0]].keys())
+    values = [[round(table[row][col],5) for col in cols] for row in rows]
+    values2 = [[fe] * len(cols) for _ in range(len(rows))]
+    fig, (ax, ax2) = plt.subplots(1, 2, figsize=(12, 6))
+    ax.matshow(values, cmap="binary")
+    ax2.matshow(values2, cmap="binary")
+
+    for i in range(len(rows)):
+        for j in range(len(cols)):
+            ax.text(j, i, str(values[i][j]), va="center", ha="center", color="red")
+            ax2.text(j, i, str(values2[i][j]), va="center", ha="center", color="black")
+
+    ax.set_xticks(range(len(cols)))
+    ax.set_xticklabels(cols)
+    ax.set_yticks(range(len(rows)))
+    ax.set_yticklabels(rows)
+    ax.set_xlabel('Columnas')
+    ax.set_ylabel('Filas')
+    plt.xlabel('Columnas')
+    plt.ylabel('Filas')
+    ax.set_title('Frecuencias Obtenidas')
+    ax2.set_xticks(range(len(cols)))
+    ax2.set_xticklabels(cols)
+    ax2.set_yticks(range(len(rows)))
+    ax2.set_yticklabels(rows)
+    ax2.set_xlabel('Columnas')
+    ax2.set_ylabel('Filas')
+    ax2.set_title('Frecuencias Esperadas')
+    
+    plt.tight_layout()
+    plt.show()
 
 def prueba_chi_cuadrado(datos, m):
     datos_rn = []
@@ -65,9 +100,37 @@ def prueba_chi_cuadrado(datos, m):
     chi_cuadrado_critico = 16.919
     resultado_string = "El generador pasó la prueba de X²" if chi_cuadrado <= chi_cuadrado_critico else "El generador falló la prueba de X²"
     print('Chi cuadrada',chi_cuadrado,'Chi critica:',chi_cuadrado_critico, resultado_string)
-    print("DATOS RN", datos_rn)
+    #print("DATOS RN", datos_rn)
 
-#prueba_chi_cuadrado(datos2, periodo)
+   # Crear la tabla de frecuencias
+    intervalos = ['0 - 0.1', '0.1 - 0.2', '0.2 - 0.3', '0.3 - 0.4', '0.4 - 0.5', '0.5 - 0.6', '0.6 - 0.7', '0.7 - 0.8', '0.8 - 0.9', '0.9 - 1', 'Sumatoria']
+    frecuencias_obtenidas = [fo[str(i)] for i in range(1, 11)] + [sum(fo.values())]
+    frecuencias_esperadas = [fe] * 10 + [len(datos)]
+    calculos = [resultados[str(i)] for i in range(1, 11)] + [chi_cuadrado]
+
+    # Crear la tabla de frecuencias en un formato que pueda usarse para el gráfico
+    tabla_frecuencias = {
+        'Intervalos': intervalos,
+        'Frecuencia Obtenida': frecuencias_obtenidas,
+        'Frecuencia Esperada': frecuencias_esperadas,
+        'Cálculos': calculos
+    }
+
+    # Convertir el diccionario a una lista de listas
+    tabla_frecuencias_values = [list(tabla_frecuencias.keys())] + list(zip(*tabla_frecuencias.values()))
+
+    # Crear el gráfico de barras de la tabla de frecuencias
+    fig, ax = plt.subplots(figsize=(10, 6))
+    ax.axis('tight')
+    ax.axis('off')
+    ax.table(cellText=tabla_frecuencias_values, loc='center', cellLoc='center')
+
+    # Mostrar el gráfico de barras de la tabla de frecuencias
+    plt.title('Tabla de Frecuencias')
+    plt.show()
+
+
+#prueba_chi_cuadrado(datos, periodo)
     
 def prueba_kolmogorov_smirnov(datos, m):
     cantidad_datos = len(datos)
@@ -75,6 +138,7 @@ def prueba_kolmogorov_smirnov(datos, m):
     datos_rn = []
     for dato in datos:
         datos_rn.append(dato / m)
+    
     fo = {
         '1': 0,
         '2': 0,
@@ -87,6 +151,7 @@ def prueba_kolmogorov_smirnov(datos, m):
         '9': 0,
         '10': 0
     }
+
     for dato in datos_rn:
         if dato >= 0.0 and dato < 0.1:
             fo['1'] += 1
@@ -108,6 +173,7 @@ def prueba_kolmogorov_smirnov(datos, m):
             fo['9'] += 1
         elif dato >= 0.9 and dato < 1:
             fo['10'] += 1
+
     foa = {
         '1': fo['1'],
         '2': fo['1'] + fo['2'],
@@ -119,31 +185,6 @@ def prueba_kolmogorov_smirnov(datos, m):
         '8': fo['1'] + fo['2'] + fo['3'] + fo['4'] + fo['5'] + fo['6'] + fo['7'] + fo['8'],
         '9': fo['1'] + fo['2'] + fo['3'] + fo['4'] + fo['5'] + fo['6'] + fo['7'] + fo['8'] + fo['9'],
         '10': fo['1'] + fo['2'] + fo['3'] + fo['4'] + fo['5'] + fo['6'] + fo['7'] + fo['8'] + fo['9'] + fo['10']
-    }
-    po = {
-        '1': (fo['1']/cantidad_datos),
-        '2': (fo['2']/cantidad_datos),
-        '3': (fo['3']/cantidad_datos),
-        '4': (fo['4']/cantidad_datos),
-        '5': (fo['5']/cantidad_datos),
-        '6': (fo['6']/cantidad_datos),
-        '7': (fo['7']/cantidad_datos),
-        '8': (fo['8']/cantidad_datos),
-        '9': (fo['9']/cantidad_datos),
-        '10': (fo['10']/cantidad_datos),
-    }
-
-    poa = {
-        '1': po['1'],
-        '2': po['1'] + po['2'],
-        '3': po['1'] + po['2'] + po['3'],
-        '4': po['1'] + po['2'] + po['3'] + po['4'],
-        '5': po['1'] + po['2'] + po['3'] + po['4'] + po['5'],
-        '6': po['1'] + po['2'] + po['3'] + po['4'] + po['5'] + po['6'],
-        '7': po['1'] + po['2'] + po['3'] + po['4'] + po['5'] + po['6'] + po['7'],
-        '8': po['1'] + po['2'] + po['3'] + po['4'] + po['5'] + po['6'] + po['7'] + po['8'],
-        '9': po['1'] + po['2'] + po['3'] + po['4'] + po['5'] + po['6'] + po['7'] + po['8'] + po['9'],
-        '10': po['1'] + po['2'] + po['3'] + po['4'] + po['5'] + po['6'] + po['7'] + po['8'] + po['9'] + po['10']
     }
 
     pea = {
@@ -159,17 +200,30 @@ def prueba_kolmogorov_smirnov(datos, m):
         '10': 1,
     }
 
+    poa = {
+        '1': (fo['1'] / cantidad_datos),
+        '2': (fo['1'] + fo['2']) / cantidad_datos,
+        '3': (fo['1'] + fo['2'] + fo['3']) / cantidad_datos,
+        '4': (fo['1'] + fo['2'] + fo['3'] + fo['4']) / cantidad_datos,
+        '5': (fo['1'] + fo['2'] + fo['3'] + fo['4'] + fo['5']) / cantidad_datos,
+        '6': (fo['1'] + fo['2'] + fo['3'] + fo['4'] + fo['5'] + fo['6']) / cantidad_datos,
+        '7': (fo['1'] + fo['2'] + fo['3'] + fo['4'] + fo['5'] + fo['6'] + fo['7']) / cantidad_datos,
+        '8': (fo['1'] + fo['2'] + fo['3'] + fo['4'] + fo['5'] + fo['6'] + fo['7'] + fo['8']) / cantidad_datos,
+        '9': (fo['1'] + fo['2'] + fo['3'] + fo['4'] + fo['5'] + fo['6'] + fo['7'] + fo['8'] + fo['9']) / cantidad_datos,
+        '10': 1,
+    }
+
     resultados = {
-        '1' :abs(pea['1'] - poa['1']),
-        '2' :abs(pea['2'] - poa['2']),
-        '3' :abs(pea['3'] - poa['3']),
-        '4' :abs(pea['4'] - poa['4']),
-        '5' :abs(pea['5'] - poa['5']),
-        '6' :abs(pea['6'] - poa['6']),
-        '7' :abs(pea['7'] - poa['7']),
-        '8' :abs(pea['8'] - poa['8']),
-        '9' :abs(pea['9'] - poa['9']),
-        '10' :abs(pea['10'] - poa['10']),
+        '1': abs(pea['1'] - poa['1']),
+        '2': abs(pea['2'] - poa['2']),
+        '3': abs(pea['3'] - poa['3']),
+        '4': abs(pea['4'] - poa['4']),
+        '5': abs(pea['5'] - poa['5']),
+        '6': abs(pea['6'] - poa['6']),
+        '7': abs(pea['7'] - poa['7']),
+        '8': abs(pea['8'] - poa['8']),
+        '9': abs(pea['9'] - poa['9']),
+        '10': abs(pea['10'] - poa['10']),
     }
 
     d_total = 0
@@ -177,17 +231,29 @@ def prueba_kolmogorov_smirnov(datos, m):
     for resultado in resultados:
         d_total += resultados[resultado]
 
-    # print("FO", fo)
-    # print("FOA", foa)
-    # print("PO", po)
-    # print("POA", poa)
-    resultado_string = "El generador pasó la prueba de Kolmogorov Smirnov" if d_total <= d_critico else "El generador falló la prueba de Kolmogorov Smirnov"
-    print("VALOR CRITICO", d_critico, "VALOR OBTENIDO", d_total, resultado_string)
-    # Mostrar resultados en una tabla
-    #print("Prueba de Kolmogorov-Smirnov:")
-    #print("Estadístico de prueba (D):", ks_statistic)
-    #print("Valor p:", ks_p_value)
+    resultado_string = "El generador pasó la prueba de Kolmogorov-Smirnov" if d_total <= d_critico else "El generador falló la prueba de Kolmogorov-Smirnov"
+    print("VALOR CRITICO:", d_critico)
+    print("VALOR OBTENIDO:", d_total)
+    print(resultado_string)
 
+    # Crear la tabla de frecuencias para el gráfico
+    intervalos = ['0 - 0.1', '0.1 - 0.2', '0.2 - 0.3', '0.3 - 0.4', '0.4 - 0.5', '0.5 - 0.6', '0.6 - 0.7', '0.7 - 0.8', '0.8 - 0.9', '0.9 - 1', 'Sumatoria']
+    fo_values = [fo[str(i)] for i in range(1, 11)] + [sum(fo.values())]
+    poa_values = [poa[str(i)] for i in range(1, 11)] + [1]
+
+    # Asegúrate de que colLabels tenga la misma longitud que la cantidad de columnas en tabla_frecuencias
+    colLabels = ['Intervalos', 'Frecuencia Observada', 'Frecuencia Acumulada Esperada']
+
+    # Crear el gráfico de barras de la tabla de frecuencias
+    fig, ax = plt.subplots(figsize=(10, 6))
+    ax.axis('tight')
+    ax.axis('off')
+    tabla_frecuencias = [colLabels] + list(zip(intervalos, fo_values, poa_values))
+    ax.table(cellText=tabla_frecuencias, loc='center', cellLoc='center', colLabels=colLabels)
+
+    # Mostrar el gráfico de barras de la tabla de frecuencias
+    plt.title('Tabla de Frecuencias para Kolmogorov-Smirnov')
+    plt.show()
 #prueba_kolmogorov_smirnov(datos, 128)
 
 def prueba_corridas(datos, m):
@@ -200,27 +266,50 @@ def prueba_corridas(datos, m):
         if index >= 1:
             caso_actual = '+' if datos_rn[index - 1] < dato else '-'
             comportamiento.append(caso_actual)
-    
+
     corridas_count = 0
     current_run = comportamiento[0]
-    
+    run_lengths = []  # Lista para almacenar las longitudes de las corridas
+    aux_corridas_count = 0
     for caso_actual in comportamiento[1:]:
         if caso_actual != current_run:
             corridas_count += 1
+            aux_corridas_count += 1
             current_run = caso_actual
+            run_lengths.append(aux_corridas_count)  # Agregar la longitud de la corrida a la lista
+            aux_corridas_count = 0
+        else:
+            aux_corridas_count += 1
+            
 
-    ua = ( ((2* cantidad_datos) -1)/ 3)
-    oa = ( ((16*cantidad_datos)-29)/ 90)
+    run_lengths.append(aux_corridas_count)  # Agregar la última corrida
+
+    ua = (((2 * cantidad_datos) - 1) / 3)
+    oa = (((16 * cantidad_datos) - 29) / 90)
     zobs = ((corridas_count - ua) / math.sqrt(oa))
     valor_critico = 1.96
-    resultado_string = "El generador pasó la prueba de corridas" if ( (valor_critico * -1) <= zobs and (valor_critico) >= zobs ) else "El generador no pasó la prueba de corridas"
-    print(zobs, valor_critico, resultado_string)
+    resultado_string = "El generador pasó la prueba de corridas" if ((valor_critico * -1) <= zobs and (valor_critico) >= zobs) else "El generador no pasó la prueba de corridas"
+
+    # Contador de corridas por longitud
+    run_length_counts = {}
+    for length in run_lengths:
+        if length in run_length_counts:
+            run_length_counts[length] += 1
+        else:
+            run_length_counts[length] = 1
+
+    print("Contador de Corridas por Longitud:")
+    for length, count in run_length_counts.items():
+        print(f"Longitud {length}: {count} veces")
+
+    print("Z Observado:", zobs)
+    print("Valor Crítico:", valor_critico)
+    print(resultado_string)
 
 #prueba_corridas(datos,periodo)  
 
 def prueba_series(datos, m):
     datos_rn = []
-    cantidad_datos = len(datos)
     for dato in datos:
         datos_rn.append(dato / m)
 
@@ -284,6 +373,8 @@ def prueba_series(datos, m):
     print("tabla de frecuencias", frequency_table)
     print("tabla de valores", frequency_values)
     print('Chi cuadrado calculado:', chi_cuadrado_calculado, "valor limite:", '36.42', resultado_string)
+    plot_2d_table(frequency_table, fe)
+    plot_2d_table(frequency_values, 0)
 
 #prueba_series(datos, periodo)
 
@@ -394,6 +485,30 @@ def prueba_poker(datos, mano_length, m):
         #print("FRECUENCIAS:", fo)
         print("Chi Cuadrado", chi_cuadrado_calculado, resultado_string)
 
+       # Calculate and print the table
+        table_data = {
+            "Categoria": ["Pachuca", "Par", "Dos Pares", "Tercia", "Full", "Poker", "Quintilla"],
+            "Probabilidad": [probabilidades["pachuca"], probabilidades["par"], probabilidades["dos pares"],
+                            probabilidades["tercia"], probabilidades["full"], probabilidades["poker"], probabilidades["quintilla"]],
+            "Frecuencia Esperada (FE)": [fe["pachuca"], fe["par"], fe["dos pares"], fe["tercia"], fe["full"], fe["poker"], fe["quintilla"]],
+            "Frecuencia Observada (FO)": [fo["pachuca"], fo["par"], fo["dos pares"], fo["tercia"], fo["full"], fo["poker"], fo["quintilla"]],
+            "Chi Cuadrado": [resultados["pachuca"], resultados["par"], resultados["dos pares"],
+                            resultados["tercia"], resultados["full"], resultados["poker"], resultados["quintilla"]],
+        }
+
+        fig, ax = plt.subplots(figsize=(10, 6))
+        ax.axis('tight')
+        ax.axis('off')
+        
+        ax.table(cellText=[list(map(str, row)) for row in zip(*list(table_data.values()))],
+                colLabels=list(table_data.keys()),  # Convert dict_keys to a list
+                cellLoc='center',
+                loc='center',
+                colColours=["lightgray"] * len(table_data.keys()))
+        
+        plt.title('Tabla de Frecuencias para Prueba de Poker')
+        plt.show()
+
     elif mano_length == 3:
         probabilidades = {
         "pachuca": 0.72,
@@ -457,6 +572,27 @@ def prueba_poker(datos, mano_length, m):
         resultado_string = "El generador pasó la prueba de Poker de 3 cartas" if chi_cuadrado_calculado <= valor_critico else "El generador falló la prueba de Poker de 3 cartas"
         #print("FRECUENCIAS:", fo)
         print("Chi Cuadrado", chi_cuadrado_calculado, resultado_string)
+        # Calculate and print the table
+        table_data = {
+            "Categoria": ["Pachuca", "Par", "Tercia"],
+            "Probabilidad": [probabilidades["pachuca"], probabilidades["par"], probabilidades["tercia"]],
+            "Frecuencia Esperada (FE)": [fe["pachuca"], fe["par"], fe["tercia"]],
+            "Frecuencia Observada (FO)": [fo["pachuca"], fo["par"], fo["tercia"]],
+            "Chi Cuadrado": [resultados["pachuca"], resultados["par"], resultados["tercia"]],
+        }
 
-prueba_poker(datos, 5, periodo)
-prueba_poker(datos, 3, periodo)
+        fig, ax = plt.subplots(figsize=(10, 6))
+        ax.axis('tight')
+        ax.axis('off')
+        
+        ax.table(cellText=[list(map(str, row)) for row in zip(*list(table_data.values()))],
+                colLabels=list(table_data.keys()),  # Convert dict_keys to a list
+                cellLoc='center',
+                loc='center',
+                colColours=["lightgray"] * len(table_data.keys()))
+        
+        plt.title('Tabla de Frecuencias para Prueba de Poker')
+        plt.show()
+
+#prueba_poker(datos, 5, periodo)
+#prueba_poker(datos, 3, periodo)
