@@ -21,8 +21,12 @@ def generador_glc(a, c, m, X0, N):
     return valores_generados, periodo
 
 # Generar números pseudoaleatorios y calcular el periodo
-#valores_generados, periodo = generador_glc(a, c, m, X0)
+c=127
+a= 9
+m=128
+X0=1
+valores_generados, periodo = generador_glc(a, c, m, X0, 200)
 
 # Mostrar los valores generados y el periodo
-#print("Valores generados:", valores_generados)
-#print("Periodo:", periodo)
+print("Valores generados:", valores_generados)
+print("Periodo:", periodo)
