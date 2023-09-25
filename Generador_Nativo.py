@@ -17,5 +17,5 @@ def generar_lista_aleatoria(size):
 
 
 #size = 10  # size deseado de la lista
-#lista_aleatoria = generar_lista_aleatoria(10)
+#lista_aleatoria = generar_lista_aleatoria(10000)
 #print(lista_aleatoria)
