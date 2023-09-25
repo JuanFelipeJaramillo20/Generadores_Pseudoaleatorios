@@ -1,6 +1,7 @@
 import numpy as np
 from Generador_Estandar_Minimo import run_gem
 from Generador_Lineal_Congruente import run_glc
+from Generador_Nativo import generar_lista_aleatoria
 from Pruebas import (
     prueba_chi_cuadrado,
     prueba_kolmogorov_smirnov,
@@ -29,14 +30,24 @@ m = 2147483641
 X0 = 1
 N = 10000
 
-valores_lcg, periodo_lcg = run_gem(a, m, X0, N)
+
+
+#valores_lcg, periodo_lcg = run_gem(a, m, X0, N)
 #valores_lcg, periodo_lcg = run_glc(a, c, m, X0, N)
 #prueba_chi_cuadrado(valores_lcg, 2147483641)
 #prueba_kolmogorov_smirnov(valores_lcg, m)
 #prueba_corridas(valores_lcg, periodo_lcg)
 #prueba_series(valores_lcg, m)
 #prueba_poker(valores_lcg, 5, m)
-prueba_poker(valores_lcg, 5, m)
+#prueba_poker(valores_lcg, 5, m)
+valores_nativos = generar_lista_aleatoria(N)
+prueba_chi_cuadrado(valores_nativos, 1)
+prueba_kolmogorov_smirnov(valores_nativos, 1)
+prueba_corridas(valores_nativos, 1)
+prueba_series(valores_nativos, 1)
+prueba_poker(valores_nativos, 3, 1)
+prueba_poker(valores_nativos, 5, 1)
+print(valores_nativos)
 """ 
 
 # Realizar pruebas de Chi-cuadrado y Kolmogorov-Smirnov para GLC

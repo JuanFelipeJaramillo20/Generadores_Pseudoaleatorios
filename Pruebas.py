@@ -41,7 +41,7 @@ def plot_2d_table(table, fe):
     plt.tight_layout()
     plt.show()
 
-def prueba_chi_cuadrado(datos, m):
+def prueba_chi_cuadrado(datos, m=1):
     datos_rn = []
     for dato in datos:
         datos_rn.append(dato / m)
@@ -132,7 +132,7 @@ def prueba_chi_cuadrado(datos, m):
 
 #prueba_chi_cuadrado(datos, periodo)
     
-def prueba_kolmogorov_smirnov(datos, m):
+def prueba_kolmogorov_smirnov(datos, m=1):
     cantidad_datos = len(datos)
     d_critico = 1.36 / math.sqrt(cantidad_datos)
     datos_rn = []
@@ -256,7 +256,7 @@ def prueba_kolmogorov_smirnov(datos, m):
     plt.show()
 #prueba_kolmogorov_smirnov(datos, 128)
 
-def prueba_corridas(datos, m):
+def prueba_corridas(datos, m=1):
     datos_rn = []
     cantidad_datos = len(datos)
     for dato in datos:
@@ -308,7 +308,7 @@ def prueba_corridas(datos, m):
 
 #prueba_corridas(datos,periodo)  
 
-def prueba_series(datos, m):
+def prueba_series(datos, m=1):
     datos_rn = []
     for dato in datos:
         datos_rn.append(dato / m)
@@ -378,7 +378,7 @@ def prueba_series(datos, m):
 
 #prueba_series(datos, periodo)
 
-def prueba_poker(datos, mano_length, m):
+def prueba_poker(datos, mano_length, m=1):
     """CASOS POSIBLES
      - Los cinco dígitos son diferentes
      - Hay exactamente un par
