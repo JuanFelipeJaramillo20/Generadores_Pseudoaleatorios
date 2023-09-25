@@ -1,2 +1,4 @@
 env
 *.pyc
+*.cpython-311
+./__pycache__/*
