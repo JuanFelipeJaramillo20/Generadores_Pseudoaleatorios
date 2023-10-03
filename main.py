@@ -9,6 +9,14 @@ from Pruebas import (
     prueba_series,
     prueba_poker,
 )
+"""Integrantes:
+Maria Camila Arcos
+Valentina Cobo
+Juan Felipe Jaramillo
+Isabella Marin
+"""
+
+
 
 """ PARA GLC:
 a = 106
